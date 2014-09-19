@@ -4,14 +4,22 @@ module Loggable::Logger
     def debug(message, options={})
       _log(:debug, message, options)
     end
+    
     def info(message, options={})
       _log(:info, message, options)
     end
+
     def warn(message, options={})
-      _log(:info, message, options)
+      _log(:warn, message, options)
     end
+
     def error(message, options={})
-      _log(:info, message, options)
+      _log(:error, message, options)
+    end
+
+    def error!(message, options={})
+      _log(:error, message, options)
+      raise message
     end
 
     private
