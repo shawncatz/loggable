@@ -4,23 +4,23 @@ class Loggable::Logger
     @options = {plex: false, faye: false, flash: false}.merge(options)
   end
 
-  def debug(title, message, options={})
+  def debug(title, message=nil, options={})
     _log(:debug, title, message, options)
   end
 
-  def info(title, message, options={})
+  def info(title, message=nil, options={})
     _log(:info, title, message, options)
   end
 
-  def warn(title, message, options={})
+  def warn(title, message=nil, options={})
     _log(:warn, title, message, options)
   end
 
-  def error(title, message, options={})
+  def error(title, message=nil, options={})
     _log(:error, title, message, options)
   end
 
-  def error!(title, message, options={})
+  def error!(title, message=nil, options={})
     _log(:error, title, message, options)
     raise message
   end
@@ -34,11 +34,10 @@ class Loggable::Logger
     end
     if message
       @logger.send(level, "#{title} - #{message}")
-      _integration(:faye, level, "#{title} - #{message}") if options[:faye] # send to faye integration, if faye: true
     else
       @logger.send(level, title)
-      _integration(:faye, level, title) if options[:faye] # send to faye integration, if faye: true
     end
+    _integration(:faye, level, title, message) if options[:faye] # send to faye integration, if faye: true
     _integration(:plex, level, title, message) if options[:plex] # send to plex integration, if plex: true
     _integration(:flash, level, title, message) if options[:flash] # send to flash (faye) integration, if flash: true
   end
