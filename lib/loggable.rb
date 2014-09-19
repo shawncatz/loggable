@@ -23,14 +23,15 @@ module Loggable
         loggable['logs'].each do |name, logger|
           loggable['loggers'] << name
           define_singleton_method(name) do
-            if @loggable['aliases'][name]
-              @loggable['aliases'][name]
-            else
-              @loggable[name]
-            end
+            @loggable[name]
           end
           loggable[name] = Yell.new(name: name) do |l|
             l.adapter :file, logger['file'], level: logger['level']
+          end
+        end
+        loggable['aliases'].each do |name, to|
+          define_singleton_method(name) do
+            @loggable[to]
           end
         end
         loggable
