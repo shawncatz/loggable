@@ -23,6 +23,27 @@ module Loggable::Integration
   end
 
   module ClassMethods
+    def debug(title, message=nil, options={})
+      logger.info(title, message, options)
+    end
+
+    def info(title, message=nil, options={})
+      logger.info(title, message, options)
+    end
+
+    def warn(title, message=nil, options={})
+      logger.info(title, message, options)
+    end
+
+    def error(title, message=nil, options={})
+      logger.info(title, message, options)
+    end
+
+    def error!(title, message=nil, options={})
+      logger.info(title, message, options)
+      raise message
+    end
+
     def loggable(name, options={})
       # @logger ||= Loggable.send(name)
       # @options = (@options||{}).merge(options)
