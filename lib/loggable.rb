@@ -1,4 +1,5 @@
 require 'loggable/version'
+require 'loggable/engine'
 require 'loggable/integration'
 require 'loggable/logger'
 
@@ -7,6 +8,14 @@ require 'active_support/all'
 
 module Loggable
   class << self
+    def config
+      @loggable
+    end
+
+    def plugins
+      config['plugins']||[]
+    end
+
     def setup
       @loggable ||= begin
         loggable = YAML.load_file("config/loggable.yml")
