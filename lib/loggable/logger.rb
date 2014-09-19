@@ -4,7 +4,7 @@ module Loggable::Logger
     def debug(message, options={})
       _log(:debug, message, options)
     end
-    
+
     def info(message, options={})
       _log(:info, message, options)
     end
@@ -26,9 +26,9 @@ module Loggable::Logger
 
     def _log(level, message, options)
       _logger.send(level, message)
-      self.class.integration(:faye, level, message) if options[:faye]
-      self.class.integration(:plex, level, message) if options[:plex]
-      self.class.integration(:flash, level, message) if options[:flash]
+      self.class.integration(:faye, level, message) if options[:faye] # send to faye integration, if faye: true
+      self.class.integration(:plex, level, message) if options[:plex] # send to plex integration, if plex: true
+      self.class.integration(:flash, level, message) if options[:flash] # send to flash (faye) integration, if flash: true
     end
 
     def _logger
@@ -47,6 +47,7 @@ module Loggable::Logger
     end
 
     def integration(name, level, message)
+      # options[name] < Services::Base ensures that option is subclass of Services::Base
       return unless @options[name] && @options[name] < Services::Base
       @options[name].send(level, message)
     end
