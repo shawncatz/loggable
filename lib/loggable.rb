@@ -1,4 +1,9 @@
+require 'loggable/version'
+require 'loggable/logger'
+
 require 'yell'
+require 'active_support/all'
+
 module Loggable
   class << self
     def setup
