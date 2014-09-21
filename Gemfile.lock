@@ -3,6 +3,7 @@ PATH
   specs:
     loggable (0.0.1)
       rails (~> 4.1.6)
+      yell (~> 2.0.4)
 
 GEM
   remote: https://rubygems.org/
@@ -78,6 +79,7 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    yell (2.0.4)
 
 PLATFORMS
   ruby

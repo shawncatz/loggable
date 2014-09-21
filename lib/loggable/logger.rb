@@ -1,45 +1,49 @@
 class Loggable::Logger
   def initialize(name, options)
     @logger = Loggable.send(name.to_sym)
-    defaults = Loggable.plugins.inject({}) {|h, e| h[e.to_sym] = false; h}
-    @options = defaults.merge(options)
+    enabled = Loggable.plugins.inject({}) {|h, e| h[e.to_sym] = false; h}
+    @options = enabled.merge(options)
+    @defaults = Loggable.config['defaults']
   end
 
-  def debug(title, message=nil, options={})
-    _log(:debug, title, message, options)
+  def debug(title, message=nil, send_to={})
+    _log(:debug, title, message, send_to)
   end
 
-  def info(title, message=nil, options={})
-    _log(:info, title, message, options)
+  def info(title, message=nil, send_to={})
+    _log(:info, title, message, send_to)
   end
 
-  def warn(title, message=nil, options={})
-    _log(:warn, title, message, options)
+  def warn(title, message=nil, send_to={})
+    _log(:warn, title, message, send_to)
   end
 
-  def error(title, message=nil, options={})
-    _log(:error, title, message, options)
+  def error(title, message=nil, send_to={})
+    _log(:error, title, message, send_to)
   end
 
-  def error!(title, message=nil, options={})
-    _log(:error, title, message, options)
+  def error!(title, message=nil, send_to={})
+    _log(:error, title, message, send_to)
     raise message
   end
 
   private
 
-  def _log(level, title, message, options={})
+  def _log(level, title, message, send_to={})
     if message.is_a?(Hash)
-      options = message
+      send_to = message
       message = nil
     end
+
     if message
       @logger.send(level, "#{title} - #{message}")
     else
       @logger.send(level, title)
     end
+
+    o = @defaults.merge(send_to)
     Loggable.plugins.each do |int|
-      _plugin(int.to_sym, level, title, message) if options[int.to_sym] # send to integration, if option true
+      _plugin(int.to_sym, level, title, message) if o[int.to_sym] # send to integration, if option true
     end
   end
 
