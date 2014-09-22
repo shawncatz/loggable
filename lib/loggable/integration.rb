@@ -48,7 +48,7 @@ module Loggable::Integration
       # @logger ||= Loggable.send(name)
       # @options = (@options||{}).merge(options)
       define_singleton_method(:logger) do
-        @logger ||= Loggable::Logger.new name, options
+        @logger ||= Loggable::Logger.new name, options.merge(title: self.name)
       end
     end
   end

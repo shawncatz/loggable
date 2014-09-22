@@ -1,9 +1,11 @@
 class Loggable::Logger
   def initialize(name, options)
+    @title = options.delete(:title)
     @logger = Loggable.send(name.to_sym)
     enabled = Loggable.plugins.inject({}) {|h, e| h[e.to_sym] = false; h}
     @options = enabled.merge(options)
-    @defaults = Loggable.config['defaults']
+    @defaults = Loggable.config['defaults'].symbolize_keys
+    # debug("logger: #{@title}: options: #{@options.inspect} defaults: #{@defaults.inspect}")
   end
 
   def debug(title, message=nil, send_to={})
@@ -35,15 +37,15 @@ class Loggable::Logger
       message = nil
     end
 
+    o = @defaults.merge(send_to.symbolize_keys)
     if message
       @logger.send(level, "#{title} - #{message}")
     else
-      @logger.send(level, title)
+      @logger.send(level, "#{title}")
     end
 
-    o = @defaults.merge(send_to)
-    Loggable.plugins.each do |int|
-      _plugin(int.to_sym, level, title, message) if o[int.to_sym] # send to integration, if option true
+    Loggable.plugins.each do |p|
+      _plugin(p.to_sym, level, title, message) if o[p.to_sym] # send to integration, if option true
     end
   end
 
@@ -54,6 +56,6 @@ class Loggable::Logger
   def _plugin(name, level, title, message=nil)
     # options[name] < Services::Base ensures that option is subclass of Services::Base
     return unless @options[name] && @options[name] < Loggable::Base
-    @options[name].send(:loggable, level, title, message)
+    @options[name].loggable(level, title, message)
   end
 end
