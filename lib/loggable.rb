@@ -1,6 +1,7 @@
 require 'loggable/version'
 require 'loggable/engine'
 require 'loggable/integration'
+require 'loggable/message'
 require 'loggable/logger'
 
 require 'yell'

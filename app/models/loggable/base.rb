@@ -1,26 +1,15 @@
 class Loggable::Base
   class << self
-    def debug(title, message)
-      message(:debug, title, message)
-    end
 
-    def info(title, message)
-      message(:info, title, message)
-    end
-
-    def warn(title, message)
-      message(:warn, title, message)
-    end
-
-    def error(title, message)
-      message(:error, title, message)
-    end
-
-    def loggable(level, title, message=nil)
-      message(level, title, message)
+    def loggable(loggable)
+      message(loggable)
     end
 
     private
+
+    def message(loggable)
+      raise "must override Loggable::Base#message"
+    end
 
     def simpletime
       t = Time.now
