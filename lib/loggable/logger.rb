@@ -2,9 +2,9 @@ class Loggable::Logger
   def initialize(name, options)
     @facility = options.delete(:facility)
     @logger = Loggable.send(name.to_sym)
-    enabled = Loggable.plugins.inject({}) {|h, e| h[e.to_sym] = false; h}
+    enabled = (Loggable.plugins||[]).inject({}) {|h, e| h[e.to_sym] = false; h}
     @options = enabled.merge(options)
-    @defaults = Loggable.config['defaults'].symbolize_keys
+    @defaults = (Loggable.config['defaults']||{}).symbolize_keys
     # debug("logger: #{@title}: options: #{@options.inspect} defaults: #{@defaults.inspect}")
   end
 
