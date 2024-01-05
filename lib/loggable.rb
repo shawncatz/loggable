@@ -32,7 +32,8 @@ module Loggable
               end
             else
               loggable[name] = Yell.new(name: name) do |l|
-                l.adapter :stdout, level: logger["level"]
+                l.adapter STDOUT, level: [:info, :warn]
+                l.adapter STDERR, level: [:error, :fatal]
               end
             end
           end
